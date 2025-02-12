@@ -1,9 +1,11 @@
+//requiring prisma to sen queries to database
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 //defining a async function with passed in variables
 const postNewImage = async (imageUrl, name, user_id) => {
   try {
+    //converting user Id into an INT
     const userIdInt = parseInt(user_id, 10);
 
     //create variable to handle prisma request, with passed in data
