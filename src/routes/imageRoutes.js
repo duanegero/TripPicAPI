@@ -12,6 +12,7 @@ const router = express.Router();
 const { postNewImage } = require("../helper/postHelpers");
 const { getImageDetails } = require("../helper/getHelpers");
 const { deleteImage } = require("../helper/deleteHelpers");
+const { updateImageName } = require("../helper/putHelpers");
 
 //creating a new S3 with the keys and region from env
 const s3 = new S3({
@@ -141,6 +142,42 @@ router.delete("/:key", async (req, res) => {
     //catch if any errors, log and throw status
     console.error("Error deleting image from S3", error);
     res.status(500).json({ error: "Failed to delete image" });
+  }
+});
+
+router.put("/:key", async (req, res) => {
+  //getting file name from URL
+  const fileKey = req.params.key;
+
+  //creating a variable to hand the URL of image
+  const imageUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ message: "Image name is required " });
+  }
+
+  try {
+    const updatedImageName = await updateImageName(imageUrl, name);
+
+    if (!updatedImageName) {
+      return res.status(500).json({ message: "Failed to update image name." });
+    }
+
+    res.status(200).json({ message: "Updated image name.", updatedImageName });
+  } catch (error) {
+    console.error(
+      "Error occurred while update image name",
+      error.message,
+      error.stack
+    );
+
+    res.status(500).json({
+      message:
+        "An error occurred while update image name. Please try again later",
+      error: error.message,
+    });
   }
 });
 
