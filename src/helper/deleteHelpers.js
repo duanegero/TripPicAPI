@@ -27,7 +27,39 @@ const deleteImage = async (imageUrl) => {
   return imageToDelete;
 };
 
+const deleteUser = async (userId) => {
+  //converting user Id into an INT
+  const userIdInt = parseInt(userId, 10);
+
+  //sending a prisma query to make the user exists
+  const userToDelete = await prisma.users.findUnique({
+    where: { id: userIdInt },
+  });
+
+  //if user doens't exist throw error
+  if (!userToDelete) {
+    throw new Error("User not found.");
+  }
+
+  //send prisma query to delete a images from user
+  // await prisma.images.delete({
+  //   where: {
+  //     user_id: userIdInt,
+  //   },
+  // });
+  //send a prisma query to delete user
+  await prisma.users.delete({
+    where: {
+      id: userIdInt,
+    },
+  });
+
+  //return restults to use else where
+  return userToDelete;
+};
+
 //export function to use else where in app
 module.exports = {
   deleteImage,
+  deleteUser,
 };

@@ -25,7 +25,28 @@ const postNewImage = async (imageUrl, name, user_id) => {
   }
 };
 
+const postNewUser = async (first_name, last_name, email, password) => {
+  try {
+    //creating a variable to handle prisma query, with passed in variables
+    const newUser = await prisma.users.create({
+      data: {
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        password: password,
+      },
+    });
+    //return resutls to use else where
+    return newUser;
+  } catch (error) {
+    //catch if any error and log
+    console.error("Error creating new user.", error);
+    throw error;
+  }
+};
+
 //export functions to use else where in app
 module.exports = {
   postNewImage,
+  postNewUser,
 };

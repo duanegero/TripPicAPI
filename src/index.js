@@ -8,7 +8,9 @@ app.use(express.json()); //middleware to parse and handle json
 app.use(cors()); //enable cors for all routes
 
 const imageRoute = require("./routes/imageRoutes");
+const usersRoute = require("./routes/usersRoute");
 app.use("/imageRoute", imageRoute);
+app.use("/usersRoute", usersRoute);
 
 app.get("/", (req, res) => {
   res.send("Welcome To TripPic API");

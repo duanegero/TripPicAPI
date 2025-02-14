@@ -13,6 +13,7 @@ const { postNewImage } = require("../helper/postHelpers");
 const { getImageDetails } = require("../helper/getHelpers");
 const { deleteImage } = require("../helper/deleteHelpers");
 const { updateImageName } = require("../helper/putHelpers");
+const { getAllUserImages } = require("../helper/getHelpers");
 
 //creating a new S3 with the keys and region from env
 const s3 = new S3({
@@ -69,7 +70,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   } catch (error) {
     //catch, log and return if any errors
     console.error("Error saving to database", error);
-    res.status(500).json({ error: "Fild to save URL to database" });
+    res.status(500).json({ error: "Failed to save URL to database" });
   }
 });
 
@@ -103,6 +104,31 @@ router.get("/:key", async (req, res) => {
     //catch and log errors with status code
     console.error("Error fetching images from S3", error);
     res.status(500).json({ error: "Failed to fetch image" });
+  }
+});
+
+//defining a route to get users images
+router.get("/user/:id", async (req, res) => {
+  //geting the user ID from URL
+  const userId = req.params.id;
+
+  //if no ID return error status and message
+  if (!userId) {
+    return res.status(400).json({ error: "No user ID provided." });
+  }
+
+  try {
+    //variable to handle helper function pass in variable
+    const userImages = await getAllUserImages(userId);
+
+    //return success status with json
+    res.status(200).json({
+      userImages,
+    });
+  } catch (error) {
+    //catch if error, log with status and json
+    console.error("Error fetching images", error);
+    res.status(500).json({ error: "Failed to fetch images" });
   }
 });
 
@@ -145,6 +171,7 @@ router.delete("/:key", async (req, res) => {
   }
 });
 
+//defining a route to update images in database
 router.put("/:key", async (req, res) => {
   //getting file name from URL
   const fileKey = req.params.key;
@@ -152,21 +179,27 @@ router.put("/:key", async (req, res) => {
   //creating a variable to hand the URL of image
   const imageUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
 
+  //getting update name from body
   const { name } = req.body;
 
+  //if no name in body return error status & message
   if (!name) {
     return res.status(400).json({ message: "Image name is required " });
   }
 
   try {
+    //create variable to handle helper function, pass in variables
     const updatedImageName = await updateImageName(imageUrl, name);
 
+    //if nothing returned from helper error status & message
     if (!updatedImageName) {
       return res.status(500).json({ message: "Failed to update image name." });
     }
 
+    //return success status and message
     res.status(200).json({ message: "Updated image name.", updatedImageName });
   } catch (error) {
+    //catch if any errors, return status and message
     console.error(
       "Error occurred while update image name",
       error.message,

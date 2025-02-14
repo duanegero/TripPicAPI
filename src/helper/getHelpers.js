@@ -24,7 +24,31 @@ const getImageDetails = async (imageUrl) => {
   }
 };
 
+const getAllUserImages = async (userId) => {
+  //converting user Id into an INT
+  const userIdInt = parseInt(userId, 10);
+  try {
+    const userImages = await prisma.images.findMany({
+      where: {
+        user_id: userIdInt,
+      },
+      select: {
+        s3_url: true,
+      },
+    });
+    if (!userImages) {
+      console.log("No images found for user:", userId);
+    }
+    return userImages;
+  } catch (error) {
+    //catch and log any errors if found
+    console.error("Error fetching image data from database.", error);
+    throw error;
+  }
+};
+
 //export function to use else where in app
 module.exports = {
   getImageDetails,
+  getAllUserImages,
 };
