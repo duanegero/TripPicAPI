@@ -28,6 +28,7 @@ const getAllUserImages = async (userId) => {
   //converting user Id into an INT
   const userIdInt = parseInt(userId, 10);
   try {
+    //varible to handle prisma query
     const userImages = await prisma.images.findMany({
       where: {
         user_id: userIdInt,
@@ -36,9 +37,13 @@ const getAllUserImages = async (userId) => {
         s3_url: true,
       },
     });
+
+    //if nothing found return error
     if (!userImages) {
       console.log("No images found for user:", userId);
     }
+
+    //return results to use else where
     return userImages;
   } catch (error) {
     //catch and log any errors if found

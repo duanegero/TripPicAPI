@@ -20,6 +20,7 @@ const updateUser = async (id, first_name, last_name, email, password) => {
   //converting user Id into an INT
   const userIdInt = parseInt(id, 10);
 
+  //varible to handle prisma query
   const updateUserDetails = await prisma.users.update({
     where: { id: userIdInt },
     data: {
@@ -31,6 +32,7 @@ const updateUser = async (id, first_name, last_name, email, password) => {
     },
   });
 
+  //return results to use else where
   return updateUserDetails;
 };
 
