@@ -2,18 +2,23 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const updateImageName = async (imageUrl, name) => {
-  //sending a prisma query with passed in variables
-  const updateImageNameDetails = await prisma.images.update({
-    where: { s3_url: imageUrl },
-    data: {
-      name: name,
-      created_at: new Date(),
-    },
-  });
-
-  //return results to use else where
-  return updateImageNameDetails;
+const updateImageName = async (imageId, name) => {
+  const imageIdInt = parseInt(imageId, 10);
+  try {
+    //sending a prisma query with passed in variables
+    const updateImageNameDetails = await prisma.images.update({
+      where: { id: imageIdInt },
+      data: {
+        name: name,
+        created_at: new Date(),
+      },
+    });
+    console.log("Updated image details:", updateImageNameDetails);
+    return updateImageNameDetails;
+  } catch (error) {
+    console.error("Error updating image:", error);
+    throw new Error("Failed to update image, Please try again");
+  }
 };
 
 const updateUser = async (id, first_name, last_name, email, password) => {

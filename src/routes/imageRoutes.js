@@ -177,7 +177,7 @@ router.put("/:key", async (req, res) => {
   const fileKey = req.params.key;
 
   //creating a variable to hand the URL of image
-  const imageUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+  // const imageUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
 
   //getting update name from body
   const { name } = req.body;
@@ -189,7 +189,7 @@ router.put("/:key", async (req, res) => {
 
   try {
     //create variable to handle helper function, pass in variables
-    const updatedImageName = await updateImageName(imageUrl, name);
+    const updatedImageName = await updateImageName(fileKey, name);
 
     //if nothing returned from helper error status & message
     if (!updatedImageName) {

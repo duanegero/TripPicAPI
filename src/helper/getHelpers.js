@@ -35,6 +35,9 @@ const getAllUserImages = async (userId) => {
       },
       select: {
         s3_url: true,
+        name: true,
+        created_at: true,
+        id: true,
       },
     });
 
