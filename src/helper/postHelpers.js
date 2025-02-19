@@ -45,8 +45,24 @@ const postNewUser = async (first_name, last_name, email, password) => {
   }
 };
 
+const postNewRequest = async (request, userId) => {
+  try {
+    const newRequest = await prisma.supportRequests.create({
+      data: {
+        request: request,
+        user_id: parseInt(userId, 10),
+      },
+    });
+    return newRequest;
+  } catch (error) {
+    console.error("Error creating new request.");
+    throw error;
+  }
+};
+
 //export functions to use else where in app
 module.exports = {
   postNewImage,
   postNewUser,
+  postNewRequest,
 };

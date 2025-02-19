@@ -3,6 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const updateImageName = async (imageId, name) => {
+  //making passed in variable a int
   const imageIdInt = parseInt(imageId, 10);
   try {
     //sending a prisma query with passed in variables
@@ -13,9 +14,12 @@ const updateImageName = async (imageId, name) => {
         created_at: new Date(),
       },
     });
+    //logging the results
     console.log("Updated image details:", updateImageNameDetails);
+    //return results to use in app
     return updateImageNameDetails;
   } catch (error) {
+    //catch and log errors
     console.error("Error updating image:", error);
     throw new Error("Failed to update image, Please try again");
   }

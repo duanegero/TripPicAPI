@@ -176,9 +176,6 @@ router.put("/:key", async (req, res) => {
   //getting file name from URL
   const fileKey = req.params.key;
 
-  //creating a variable to hand the URL of image
-  // const imageUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
-
   //getting update name from body
   const { name } = req.body;
 

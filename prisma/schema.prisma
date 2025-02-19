@@ -17,11 +17,22 @@ model images {
 }
 
 model users {
-    id         Int       @id @default(autoincrement())
-    first_name String    @db.VarChar(255)
-    last_name  String    @db.VarChar(255)
-    email      String    @unique @db.VarChar(255)
-    password   String
-    created_at DateTime? @default(now()) @db.Timestamp(6)
-    images     images[]
+    id              Int               @id @default(autoincrement())
+    first_name      String            @db.VarChar(255)
+    last_name       String            @db.VarChar(255)
+    email           String            @unique @db.VarChar(255)
+    password        String
+    created_at      DateTime?         @default(now()) @db.Timestamp(6)
+    images          images[]
+    supportRequests supportRequests[]
+}
+
+model supportRequests {
+    id         Int      @id @default(autoincrement())
+    request    String
+    user_id    Int
+    created_at DateTime @default(now()) @db.Timestamp(6)
+    users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+    @@map("supportrequests")
 }

@@ -10,9 +10,11 @@ app.use(cors()); //enable cors for all routes
 const imageRoute = require("./routes/imageRoutes");
 const usersRoute = require("./routes/usersRoute");
 const loginRoute = require("./routes/loginRoute");
+const supportRoute = require("./routes/supportRoute");
 app.use("/imageRoute", imageRoute);
 app.use("/usersRoute", usersRoute);
 app.use("/loginRoute", loginRoute);
+app.use("/supportRoute", supportRoute);
 
 app.get("/", (req, res) => {
   res.send("Welcome To TripPic API");
