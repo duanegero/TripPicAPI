@@ -15,6 +15,8 @@ const { deleteImage } = require("../helper/deleteHelpers");
 const { updateImageName } = require("../helper/putHelpers");
 const { getAllUserImages } = require("../helper/getHelpers");
 
+const verifyToken = require("../middleware/token");
+
 //creating a new S3 with the keys and region from env
 const s3 = new S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -40,7 +42,7 @@ const upload = multer({
 });
 
 //defining a route to post to S3 bucket
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", upload.single("image"), verifyToken, async (req, res) => {
   //checks if the file has been uploaded
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded." });
@@ -108,7 +110,7 @@ router.get("/:key", async (req, res) => {
 });
 
 //defining a route to get users images
-router.get("/user/:id", async (req, res) => {
+router.get("/user/:id", verifyToken, async (req, res) => {
   //geting the user ID from URL
   const userId = req.params.id;
 
@@ -133,7 +135,7 @@ router.get("/user/:id", async (req, res) => {
 });
 
 //defining a route to delete from S3 bucket
-router.delete("/:key", async (req, res) => {
+router.delete("/:key", verifyToken, async (req, res) => {
   //getting file name from URL
   const fileKey = req.params.key;
 
@@ -172,9 +174,9 @@ router.delete("/:key", async (req, res) => {
 });
 
 //defining a route to update images in database
-router.put("/:key", async (req, res) => {
-  //getting file name from URL
-  const fileKey = req.params.key;
+router.put("/:id", verifyToken, async (req, res) => {
+  //getting id from URL
+  const id = req.params.id;
 
   //getting update name from body
   const { name } = req.body;
@@ -186,7 +188,7 @@ router.put("/:key", async (req, res) => {
 
   try {
     //create variable to handle helper function, pass in variables
-    const updatedImageName = await updateImageName(fileKey, name);
+    const updatedImageName = await updateImageName(id, name);
 
     //if nothing returned from helper error status & message
     if (!updatedImageName) {

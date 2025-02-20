@@ -9,6 +9,7 @@ const router = express.Router();
 const { postNewUser } = require("../helper/postHelpers");
 const { deleteUser } = require("../helper/deleteHelpers");
 const { updateUser } = require("../helper/putHelpers");
+const verifyToken = require("../middleware/token");
 
 router.post("/", async (req, res) => {
   //creating variables to handle data from body
