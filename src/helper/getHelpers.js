@@ -55,8 +55,28 @@ const getAllUserImages = async (userId) => {
   }
 };
 
+const getUserDetials = async (userId) => {
+  const userIdInt = parseInt(userId, 10);
+
+  try {
+    const userDetails = await prisma.users.findUnique({
+      where: { id: userIdInt },
+    });
+
+    if (!userDetails) {
+      console.log("No user found.");
+    }
+
+    return userDetails;
+  } catch (error) {
+    console.error("Error occurred fetch user details.", error);
+    throw error;
+  }
+};
+
 //export function to use else where in app
 module.exports = {
   getImageDetails,
   getAllUserImages,
+  getUserDetials,
 };

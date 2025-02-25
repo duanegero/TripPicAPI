@@ -41,13 +41,6 @@ const deleteUser = async (userId) => {
     throw new Error("User not found.");
   }
 
-  //send prisma query to delete a images from user
-  // await prisma.images.delete({
-  //   where: {
-  //     user_id: userIdInt,
-  //   },
-  // });
-  //send a prisma query to delete user
   await prisma.users.delete({
     where: {
       id: userIdInt,

@@ -9,7 +9,35 @@ const router = express.Router();
 const { postNewUser } = require("../helper/postHelpers");
 const { deleteUser } = require("../helper/deleteHelpers");
 const { updateUser } = require("../helper/putHelpers");
+const { getUserDetials } = require("../helper/getHelpers");
+
 const verifyToken = require("../middleware/token");
+
+router.get("/:id", verifyToken, async (req, res) => {
+  //getting user ID from URL
+  const userId = req.params.id;
+
+  try {
+    //variable to handle helper function call with passed in variable
+    const result = await getUserDetials(userId);
+
+    //return ok status with result
+    res.status(200).json(result);
+  } catch (error) {
+    //catch and log if any errors
+    console.error(
+      "Error occurred while fetching user details.",
+      error.message,
+      error.stack
+    );
+
+    //return error status with json messgae
+    res.status(500).json({
+      message: "An error occurred while fetching user details.",
+      error: error.message,
+    });
+  }
+});
 
 router.post("/", async (req, res) => {
   //creating variables to handle data from body
@@ -41,7 +69,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   //get ID from URL
   const userId = req.params.id;
 
