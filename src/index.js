@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3005; //setting port number for server
 app.use(express.json()); //middleware to parse and handle json
 app.use(cors()); //enable cors for all routes
 
-const imageRoute = require("./routes/imageRoutes");
+const imageRoute = require("./routes/imageRoute");
 const usersRoute = require("./routes/usersRoute");
 const loginRoute = require("./routes/loginRoute");
 const supportRoute = require("./routes/supportRoute");
